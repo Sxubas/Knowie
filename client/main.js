@@ -5,12 +5,8 @@ import { render } from 'react-dom';
 import './main.html';
  
 import '../imports/startup/accounts-config.js';
-import App from '../imports/ui/App.js';
+//import App from '../imports/ui/App.js'; unused import
 import { AppRoutes } from '../imports/routes.js';
- 
-// Meteor.startup(() => {
-//   render(<App />, document.getElementById('render-target'));
-// });
 
 
 Meteor.startup(() => {

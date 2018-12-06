@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-import { Redirect} from 'react-router';
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Redirect } from 'react-router';
 
 import { Activities } from '../api/activities.js';
 
@@ -10,7 +10,7 @@ import Navbar from './Navbar.js';
 
 class NewActivity extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -23,12 +23,14 @@ class NewActivity extends Component {
     event.preventDefault();
     let success = true;
 
-    const title = ReactDOM.findDOMNode(this.refs.titleActivity).value.trim();
+    //Esta es la manera antigua de tener refs. Usando this.[nombre-ref] se ahorra todo esto
+    //Para usarlo así es necesario declararlo con arrow functions (ver abajo)
+    const title = this.titleActivity.value.trim();
     const hashtag = ReactDOM.findDOMNode(this.refs.hashtagActivity).value.trim();
     const place = ReactDOM.findDOMNode(this.refs.placeActivity).value.trim();
     const date = ReactDOM.findDOMNode(this.refs.dateActivity).value.trim();
     const initTime = ReactDOM.findDOMNode(this.refs.initTimeActivity).value.trim();
-    const finishTime= ReactDOM.findDOMNode(this.refs.finishTimeActivity).value.trim();
+    const finishTime = ReactDOM.findDOMNode(this.refs.finishTimeActivity).value.trim();
     const capacity = parseInt(ReactDOM.findDOMNode(this.refs.capacityActivity).value.trim(), 10);
     const price = parseInt(ReactDOM.findDOMNode(this.refs.priceActivity).value.trim(), 10);
 
@@ -46,7 +48,7 @@ class NewActivity extends Component {
     let dateActivity = new Date(stringDate);
     let dateActual = new Date();
 
-    if(dateActual > dateActivity){
+    if (dateActual > dateActivity) {
       console.log('La fecha de inicio seleccionada ya ocurrió');
       this.setState({
         errorMessage: 'La fecha de inicio seleccionada ya ocurrió.',
@@ -54,7 +56,7 @@ class NewActivity extends Component {
       success = false;
     }
 
-    if(Date.parse('01/01/2011 ' + initTime) > Date.parse('01/01/2011 ' + finishTime)){
+    if (Date.parse('01/01/2011 ' + initTime) > Date.parse('01/01/2011 ' + finishTime)) {
       console.log('La hora de inicio debe ser antes que la hora de fin');
       this.setState({
         errorMessage: 'La hora de inicio debe ser antes que la hora de fin.',
@@ -62,7 +64,7 @@ class NewActivity extends Component {
       success = false;
     }
 
-    if(capacity < 0) {
+    if (capacity < 0) {
       console.log('La capacidad de la actividad no puede ser negativa.');
       this.setState({
         errorMessage: 'La capacidad de la actividad no puede ser negativa.',
@@ -70,7 +72,7 @@ class NewActivity extends Component {
       success = false;
     }
 
-    if(price < 0) {
+    if (price < 0) {
       console.log('El precio de la actividad no puede ser negativo.');
       this.setState({
         errorMessage: 'El precio de la actividad no puede ser negativo.',
@@ -78,13 +80,11 @@ class NewActivity extends Component {
       success = false;
     }
 
-
-    
-
-    if(success) {
+    if (success) {
 
       Meteor.call('activities.insert', title, place, date, initTime, finishTime, capacity, price, hashtag);
 
+      //Lo mismo que arriba
       ReactDOM.findDOMNode(this.refs.titleActivity).value = '';
       ReactDOM.findDOMNode(this.refs.placeActivity).value = '';
       ReactDOM.findDOMNode(this.refs.dateActivity).value = '';
@@ -98,13 +98,13 @@ class NewActivity extends Component {
         finished: true,
       });
     }
-    
+
   }
 
-  renderErrorMessage(){
+  renderErrorMessage() {
     let errorMessage = this.state.errorMessage;
 
-    if(errorMessage !== ''){
+    if (errorMessage !== '') {
       return (<div className="alert alert-danger" role="alert">
         {errorMessage}
       </div>);
@@ -116,17 +116,17 @@ class NewActivity extends Component {
   render() {
 
     let finished = this.state.finished;
-    if(finished){
+    if (finished) {
       return (
         <div>
-          <Navbar/>
-          <br/>
-          <br/>
+          <Navbar />
+          <br />
+          <br />
 
           <div className="container detail-container">
             <h3>Actividad Creada Exitosamente</h3>
-            <br/>
-            <br/>
+            <br />
+            <br />
             <h5><a href="/">Regresar a la lista de actividades.</a></h5>
           </div>
 
@@ -136,9 +136,9 @@ class NewActivity extends Component {
 
     return (
       <div>
-        <Navbar/>
-        <br/>
-        <br/>
+        <Navbar />
+        <br />
+        <br />
         <div id="contenedorNuevaAct" className="container form-container">
           <div className="row">
             <div className="col-7">
@@ -147,18 +147,18 @@ class NewActivity extends Component {
               </div>
               <form className="new-question" onSubmit={this.handleSubmit.bind(this)}>
                 <label className="letraBonita">Titulo: </label>
-                <br/>
+                <br />
                 <input
                   className="letraBonita form-control"
                   type="text"
-                  ref="titleActivity"
+                  ref={ref => this.titleActivity = ref}
                   placeholder="Titulo de tu actividad"
                   size="70"
                   required
                 />
-                <br/>
+                <br />
                 <label className="letraBonita">Lugar: </label>
-                <br/>
+                <br />
                 <input
                   className="letraBonita form-control"
                   type="text"
@@ -167,9 +167,9 @@ class NewActivity extends Component {
                   size="70"
                   required
                 />
-                <br/>
+                <br />
                 <label className="letraBonita">Fecha: </label>
-                <br/>
+                <br />
                 <input
                   className="letraBonita form-control"
                   type="date"
@@ -177,9 +177,9 @@ class NewActivity extends Component {
                   size="70"
                   required
                 />
-                <br/>
+                <br />
                 <label className="letraBonita">Hora Inicio: </label>
-                <br/>
+                <br />
                 <input
                   className="letraBonita form-control"
                   type="time"
@@ -187,9 +187,9 @@ class NewActivity extends Component {
                   size="70"
                   required
                 />
-                <br/>
+                <br />
                 <label className="letraBonita">Hora Fin: </label>
-                <br/>
+                <br />
                 <input
                   className="letraBonita form-control"
                   type="time"
@@ -197,9 +197,9 @@ class NewActivity extends Component {
                   size="70"
                   required
                 />
-                <br/>
+                <br />
                 <label className="letraBonita">Capacidad: </label>
-                <br/>
+                <br />
                 <input
                   className="form-control"
                   type="number"
@@ -209,20 +209,20 @@ class NewActivity extends Component {
                   min="0"
                   required
                 />
-                <br/>
-                  <label className="letraBonita">Hashtag Twitter: </label>
-                  <br/>
-                  <input
-                      className="form-control"
-                      type="text"
-                      ref="hashtagActivity"
-                      placeholder="Hashtag para ver actividades en twitter"
-                      size="70"
-                      required
-                  />
-                  <br/>
+                <br />
+                <label className="letraBonita">Hashtag Twitter: </label>
+                <br />
+                <input
+                  className="form-control"
+                  type="text"
+                  ref="hashtagActivity"
+                  placeholder="Hashtag para ver actividades en twitter"
+                  size="70"
+                  required
+                />
+                <br />
                 <label className="letraBonita">Precio: </label>
-                <br/>
+                <br />
                 <input
                   className="form-control"
                   type="number"
@@ -232,20 +232,20 @@ class NewActivity extends Component {
                   min="0"
                   required
                 />
-                <br/>
-                <br/>
+                <br />
+                <br />
                 {this.renderErrorMessage()}
                 <button type="submit" className="letraBonita btn btn-light btn-form">
                   Publicar
                 </button>
               </form>
 
-              <br/>
-              <br/>
+              <br />
+              <br />
             </div>
 
           </div>
-        </div>  
+        </div>
 
       </div>
     );

@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Navbar from './Navbar.js';
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-import {Link} from 'react-router-dom';
-import {Redirect} from 'react-router';
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
+/* import {Link} from 'react-router-dom'; unused imprort*/
+import { Redirect } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroller';
-import Ima from 'react-image';
+/* import Ima from 'react-image'; unused import*/
 
 class ActivityDetail extends Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class ActivityDetail extends Component {
       deleted: false,
       twits: [],
       hayMasTwits: false,
-      cantidadTwits:10
+      cantidadTwits: 10
     };
   }
 
@@ -40,16 +40,15 @@ class ActivityDetail extends Component {
       // console.log('twits', twits);
       let hayMas = false;
       let sumarTwits = this.state.cantidadTwits;
-      if (twits.length===10)
-      {
-        hayMas=true;
-        sumarTwits = sumarTwits+10;
+      if (twits.length === 10) {
+        hayMas = true;
+        sumarTwits = sumarTwits + 10;
       }
       this.setState({
         twits: twits,
-        hayMasTwits:hayMas,
-        cantidadTwits:sumarTwits
-      })
+        hayMasTwits: hayMas,
+        cantidadTwits: sumarTwits
+      });
     });
   }
 
@@ -86,21 +85,20 @@ class ActivityDetail extends Component {
     ));
   }
 
-  cargarMas(){
+  cargarMas() {
     Meteor.call('activities.twitter', this.state.currentActivity._id, this.state.cantidadTwits, (err, twits) => {
       // console.log('twits', twits);
       let hayMas = false;
       let sumarTwits = this.state.cantidadTwits;
-      if (twits.length===10)
-      {
-        hayMas=true;
-        sumarTwits = sumarTwits+10;
+      if (twits.length === 10) {
+        hayMas = true;
+        sumarTwits = sumarTwits + 10;
       }
       this.setState({
         twits: twits,
-        hayMasTwits:hayMas,
-        cantidadTwits:sumarTwits
-      })
+        hayMasTwits: hayMas,
+        cantidadTwits: sumarTwits
+      });
     });
   }
 
@@ -110,7 +108,7 @@ class ActivityDetail extends Component {
     let participate = false;
     let isParticipant = false;
     if (currentUser === null) {
-      return <Redirect to="/"/>;
+      return <Redirect to="/" />;
     }
 
 
@@ -130,13 +128,13 @@ class ActivityDetail extends Component {
     if (deleted) {
       return (
         <div>
-          <Navbar/>
-          <br/>
+          <Navbar />
+          <br />
 
           <div className="container detail-container">
             <h3>Actividad Eliminada Exitosamente</h3>
-            <br/>
-            <br/>
+            <br />
+            <br />
             <h5><a href="/">Regresar a la lista de actividades.</a></h5>
           </div>
 
@@ -146,25 +144,27 @@ class ActivityDetail extends Component {
     }
 
     var items = [];
-    {this.state.twits[0] !== undefined ? this.state.twits.map((twit, i) => (
-      items.push(
-      <div key={'twits' + i} className="row filaTwits">
-        <div className="col-3">
-          <img className="imagenTwitter" src={twit.user.profile_image_url} alt="imagen_perfil"/>
-        </div>
-        <div className="col-9">
-          <h5 className="nombreTwitter">{twit.user.name}</h5>
-          <h5 className="usuarioTwitter">@{twit.user.screen_name}</h5>
-          <p className="textoTwitter">{twit.text}</p>
-        </div>
-      </div>
-    ))) : ''}
+    {
+      this.state.twits[0] !== undefined ? this.state.twits.map((twit, i) => (
+        items.push(
+          <div key={'twits' + i} className="row filaTwits">
+            <div className="col-3">
+              <img className="imagenTwitter" src={twit.user.profile_image_url} alt="imagen_perfil" />
+            </div>
+            <div className="col-9">
+              <h5 className="nombreTwitter">{twit.user.name}</h5>
+              <h5 className="usuarioTwitter">@{twit.user.screen_name}</h5>
+              <p className="textoTwitter">{twit.text}</p>
+            </div>
+          </div>
+        ))) : '';
+    }
 
 
     return (
       <div>
-        <Navbar/>
-        <br/>
+        <Navbar />
+        <br />
         <div className="container col-md-8" id="detailContainer">
           <div id="titulo-detail">
             <h3 id="titulo">{currentActivity.title}</h3>
@@ -195,7 +195,7 @@ class ActivityDetail extends Component {
                 <p className="label-info">Hashtag Twitter:</p>
                 <p className="texto-info">#{currentActivity.hashtag} #knowie</p>
               </div>
-              <br/>
+              <br />
               {
                 currentUser !== undefined && currentUser.username === currentActivity.username ?
                   <button id="btnBorrar" className="delete btn btn-danger" onClick={this.deleteThisActivity.bind(this)}>
@@ -219,32 +219,32 @@ class ActivityDetail extends Component {
               }
 
               {
-                isParticipant ? 
+                isParticipant ?
                   <div className="alert alert-primary" role="alert">
                     Ya estás inscrito a esta actividad.
                   </div> : ''
               }
-              <br/>
-              <br/>
+              <br />
+              <br />
             </div>
             <div className="col-6">
               <p className="label-info" id="twits">Actividad Reciente</p>
-                <div id="container-twits" className="col-12">
-                {this.state.twits.length>0?
-                <InfiniteScroll
-                  pageStart={0}
-                  loadMore={this.cargarMas.bind(this)}
-                  hasMore={this.state.hayMasTwits}
-                  useWindow = {false}
-                  loader={<p>Loading, Please Wait</p>}>
-                  {items}
-                </InfiniteScroll>
-              :<div id="sinTwits">
-                <h5 id="tituloNoTwit">Unete a la comunidad tuiteando con nuestro hashtag</h5>
-                 <img id="logoTwit" src="/twitter.png" alt="Logo Twitter"/>
-               </div>
+              <div id="container-twits" className="col-12">
+                {this.state.twits.length > 0 ?
+                  <InfiniteScroll
+                    pageStart={0}
+                    loadMore={this.cargarMas.bind(this)}
+                    hasMore={this.state.hayMasTwits}
+                    useWindow={false}
+                    loader={<p>Loading, Please Wait</p>}>
+                    {items}
+                  </InfiniteScroll>
+                  : <div id="sinTwits">
+                    <h5 id="tituloNoTwit">Unete a la comunidad tuiteando con nuestro hashtag</h5>
+                    <img id="logoTwit" src="/twitter.png" alt="Logo Twitter" />
+                  </div>
                 }
-                </div>
+              </div>
               {
                 this.state.showParticipants ?
                   <div>
@@ -252,14 +252,14 @@ class ActivityDetail extends Component {
                     <ul className="list-group">
                       {this.renderParticipantsList()}
                     </ul>
-                    <br/>
+                    <br />
                   </div> : ''
               }
             </div>
           </div>
         </div>
-        <br/>
-        <br/>
+        <br />
+        <br />
       </div>
     );
   }

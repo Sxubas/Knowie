@@ -1,9 +1,7 @@
-import React, {Component} from 'react';
-import {Meteor} from 'meteor/meteor';
-import {Link} from 'react-router-dom';
-
-import {Activities} from '../api/activities.js';
-
+import React, { Component } from 'react';
+import { Meteor } from 'meteor/meteor';
+import { Link } from 'react-router-dom';
+/* import {Activities} from '../api/activities.js'; unused import*/
 
 export default class Activity extends Component {
 
@@ -20,9 +18,9 @@ export default class Activity extends Component {
         }}>
           <h5>{this.props.activity.title}</h5>
 
-        <br/>
-        <p>{'Hora: ' + this.props.activity.initTime + ' - ' + this.props.activity.finishTime}</p>
-        <br/>
+          <br />
+          <p>{'Hora: ' + this.props.activity.initTime + ' - ' + this.props.activity.finishTime}</p>
+          <br />
         </Link>
       </div>
     );

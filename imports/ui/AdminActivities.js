@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import {Meteor} from 'meteor/meteor';
-import {withTracker} from 'meteor/react-meteor-data';
-import { Redirect} from 'react-router';
+import React, { Component } from 'react';
+/* import ReactDOM from 'react-dom'; unused import*/
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
+/* import { Redirect } from 'react-router'; unused import*/
 
 import { Activities } from '../api/activities.js';
 
@@ -10,14 +10,14 @@ import Navbar from './Navbar.js';
 
 class AdminActivities extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
 
   }
 
-  renderTableRow(){
-    return this.props.adminActivities.map((activity) => (
-      <tr>
+  renderTableRow() {
+    return this.props.adminActivities.map((activity, i) => (
+      <tr key={activity.id || i}>
         <td>{activity.title}</td>
         <td>{activity.date}</td>
         <td>{activity.place}</td>
@@ -33,16 +33,16 @@ class AdminActivities extends Component {
 
     return (
       <div>
-        <Navbar/>
-        <br/>
-        <br/>
+        <Navbar />
+        <br />
+        <br />
         <div id="contenedorNuevaAct" className="container form-container">
           <div className="row">
             <div className="col-9">
               <div className="form-title">
                 <h3 className="titleAdminActivities">Actividades creadas: </h3>
               </div>
-              <br/>
+              <br />
               <div>
                 <table>
                   <tr>
@@ -55,14 +55,14 @@ class AdminActivities extends Component {
                 </table>
 
               </div>
-  
 
-              <br/>
-              <br/>
+
+              <br />
+              <br />
             </div>
 
           </div>
-        </div>  
+        </div>
 
       </div>
     );
@@ -75,6 +75,6 @@ export default withTracker(() => {
 
   return {
     currentUser: Meteor.user(),
-    adminActivities: Activities.find({username: Meteor.user().username}, {sort: {date: 1}}).fetch(),
+    adminActivities: Activities.find({ username: Meteor.user().username }, { sort: { date: 1 } }).fetch(),
   };
 })(AdminActivities);

@@ -4,22 +4,22 @@ import { withTracker } from 'meteor/react-meteor-data';
 import ActivitiesList from './ListaActivities.js';
 import Inicio from './Inicio.js';
 import Navbar from './Navbar.js';
-import Activity from './Activity.js';
  
 // App component - represents the whole app
 class App extends Component {
  
-  renderActivities() {
+  //Unused method
+  /* renderActivities() {
     return this.props.activities.map((activity) => (
       <Activity key={activity._id} activity={activity} />
     ));
-  }
+  } */
  
   render() {
     return (
       <div>
         <Navbar/>
-        {!!Meteor.user() ?
+        {/*redundante !!*/Meteor.user() ?
           <ActivitiesList/>:<Inicio/>
         }
         <div className="footer">
